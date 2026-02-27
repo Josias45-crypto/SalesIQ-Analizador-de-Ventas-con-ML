@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SalesIQ Pro — Inteligencia de Ventas con ML</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:     #1a1916;
+  --ink2:    #2d2b27;
+  --cream:   #f7f6f3;
+  --muted:   #8c8880;
+  --indigo:  #3d52a0;
+  --indigo2: #6272c3;
+  --amber:   #b8621a;
+  --jade:    #1e6b4a;
+  --border:  #2d2b27;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--ink);
+  color: var(--cream);
+  overflow-x: hidden;
+}
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 60px;
+  background: rgba(26,25,22,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav-logo {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: white;
+  letter-spacing: -0.5px;
+}
+.nav-logo span { color: rgba(255,255,255,0.4); }
+.nav-links { display: flex; gap: 36px; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: var(--muted);
+  text-decoration: none; letter-spacing: 0.3px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: white; }
+.nav-cta {
+  background: var(--indigo);
+  color: white !important;
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: background 0.2s, transform 0.2s !important;
+}
+.nav-cta:hover { background: #2d3f80 !important; transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 120px 40px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fondo con malla de puntos */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+/* Manchas de luz de fondo */
+.glow-1 {
+  position: absolute; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(61,82,160,0.18) 0%, transparent 65%);
+  top: -100px; left: -100px; pointer-events: none;
+  animation: drift1 12s ease-in-out infinite alternate;
+}
+.glow-2 {
+  position: absolute; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(184,98,26,0.12) 0%, transparent 65%);
+  bottom: -80px; right: -80px; pointer-events: none;
+  animation: drift2 10s ease-in-out infinite alternate;
+}
+@keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(60px, 40px); } }
+@keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-40px, -60px); } }
+
+.hero-inner { position: relative; z-index: 1; max-width: 820px; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(61,82,160,0.12);
+  border: 1px solid rgba(61,82,160,0.3);
+  color: #8fa0d4;
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 11px; letter-spacing: 2.5px;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase; margin-bottom: 32px;
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px;
+  background: #68d391; border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400; line-height: 1.05;
+  letter-spacing: -2px; margin-bottom: 24px;
+}
+h1 em { font-style: italic; color: rgba(255,255,255,0.45); }
+h1 strong { color: white; }
+
+.hero-sub {
+  font-size: 1.1rem; color: var(--muted);
+  line-height: 1.8; max-width: 560px;
+  margin: 0 auto 44px; font-weight: 300;
+}
+
+.hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--indigo); color: white;
+  padding: 15px 36px; border-radius: 10px;
+  font-weight: 600; font-size: 15px;
+  text-decoration: none; letter-spacing: 0.3px;
+  transition: all 0.2s;
+  box-shadow: 0 0 0 0 rgba(61,82,160,0);
+}
+.btn-primary:hover {
+  background: #2d3f80; transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(61,82,160,0.35);
+}
+.btn-secondary {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  padding: 15px 36px; border-radius: 10px;
+  font-weight: 500; font-size: 15px;
+  text-decoration: none; transition: all 0.2s;
+}
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.09);
+  color: white; transform: translateY(-2px);
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: var(--ink2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 60px;
+  display: flex; justify-content: center; gap: 80px;
+  flex-wrap: wrap;
+}
+.stat { text-align: center; }
+.stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem; color: white; line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 11px; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── SECCIÓN GENÉRICA ── */
+section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+.section-tag {
+  font-size: 10px; letter-spacing: 3px; color: var(--indigo2);
+  text-transform: uppercase; font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 16px; display: block;
+}
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400; line-height: 1.1;
+  letter-spacing: -1px; margin-bottom: 16px;
+}
+.section-title em { font-style: italic; color: rgba(255,255,255,0.4); }
+.section-sub { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 520px; }
+
+/* ── FEATURES ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2px; margin-top: 60px;
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+.feat {
+  background: var(--ink2);
+  padding: 36px 32px;
+  transition: background 0.2s;
+  position: relative; overflow: hidden;
+}
+.feat:hover { background: #252320; }
+.feat::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; background: transparent;
+  transition: background 0.2s;
+}
+.feat:hover::before { background: linear-gradient(90deg, var(--indigo), var(--amber)); }
+.feat-icon {
+  font-size: 1.8rem; margin-bottom: 18px; display: block;
+}
+.feat-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem; color: white;
+  margin-bottom: 10px; letter-spacing: -0.3px;
+}
+.feat-desc { font-size: 13px; color: var(--muted); line-height: 1.8; }
+.feat-tag {
+  display: inline-block; margin-top: 16px;
+  font-size: 10px; letter-spacing: 1.5px;
+  color: var(--indigo2); font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+}
+
+/* ── DASHBOARD MOCKUP ── */
+.mockup-section {
+  padding: 80px 60px; background: var(--ink2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.mockup-wrap { max-width: 1100px; margin: 0 auto; }
+.mockup-header { text-align: center; margin-bottom: 56px; }
+
+/* Simulación visual del dashboard */
+.dashboard-mock {
+  background: #f7f6f3;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.mock-topbar {
+  background: #1a1916;
+  padding: 14px 24px;
+  display: flex; align-items: center; gap: 8px;
+}
+.mock-dot { width: 12px; height: 12px; border-radius: 50%; }
+.mock-hero-bar {
+  background: #1a1916;
+  padding: 28px 32px;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, #6272c3, #b8621a, transparent) 1;
+}
+.mock-hero-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.8rem; color: white; font-style: italic;
+}
+.mock-hero-sub { font-size: 11px; color: rgba(255,255,255,0.3); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+
+.mock-body { padding: 24px 32px; }
+.mock-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 20px; }
+.mock-kpi {
+  background: white; border-radius: 10px;
+  padding: 16px 14px;
+  border: 1px solid #e8e6e1;
+  border-top: 3px solid;
+}
+.mock-kpi-label { font-size: 8px; color: #8c8880; letter-spacing: 1.5px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+.mock-kpi-value { font-family: 'DM Serif Display', serif; font-size: 1.3rem; color: #1a1916; }
+
+.mock-row { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+.mock-chart { background: white; border-radius: 10px; padding: 16px; border: 1px solid #e8e6e1; height: 140px; position: relative; overflow: hidden; }
+.mock-chart-bars {
+  display: flex; align-items: flex-end; gap: 6px; height: 100%;
+  padding-top: 10px;
+}
+.mock-bar { flex: 1; border-radius: 4px 4px 0 0; background: #eef0f8; position: relative; transition: background 0.2s; }
+.mock-bar.highlight { background: #3d52a0; }
+.mock-bar-line {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  border-top: 2px solid; display: flex; align-items: flex-start;
+}
+.mock-pred-card {
+  background: #3d52a0; border-radius: 10px;
+  padding: 20px 16px; text-align: center; height: 140px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.mock-pred-label { font-size: 8px; letter-spacing: 2px; color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px; }
+.mock-pred-num { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: white; }
+.mock-pred-range { font-size: 9px; color: rgba(255,255,255,0.4); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+
+/* ── HOW IT WORKS ── */
+.steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 60px; }
+.step {
+  padding: 40px 32px; background: var(--ink2);
+  border: 1px solid var(--border); border-radius: 12px;
+  position: relative;
+}
+.step-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 4rem; color: rgba(255,255,255,0.04);
+  position: absolute; top: 16px; right: 24px;
+  line-height: 1;
+}
+.step-icon { font-size: 1.5rem; margin-bottom: 16px; display: block; }
+.step-title { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: white; margin-bottom: 10px; }
+.step-desc { font-size: 13px; color: var(--muted); line-height: 1.8; }
+
+/* ── PRICING ── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px; margin-top: 56px;
+}
+.price-card {
+  background: var(--ink2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px 30px;
+  position: relative; transition: border-color 0.2s, transform 0.2s;
+}
+.price-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-3px); }
+.price-card.featured {
+  border-color: var(--indigo);
+  background: linear-gradient(135deg, #1e2340 0%, var(--ink2) 100%);
+}
+.price-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--indigo); color: white;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  padding: 4px 16px; border-radius: 20px; text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}
+.price-name { font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin-bottom: 16px; }
+.price-amount {
+  font-family: 'DM Serif Display', serif;
+  font-size: 3rem; color: white; line-height: 1;
+  margin-bottom: 4px;
+}
+.price-amount span { font-size: 1.2rem; color: var(--muted); font-family: 'Outfit', sans-serif; }
+.price-period { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+.price-features { list-style: none; margin-bottom: 32px; }
+.price-features li {
+  font-size: 13px; color: rgba(255,255,255,0.7);
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; gap: 10px;
+}
+.price-features li::before { content: '✓'; color: var(--jade); font-weight: 700; font-size: 12px; }
+.price-features li.no::before { content: '✕'; color: rgba(255,255,255,0.2); }
+.price-features li.no { color: rgba(255,255,255,0.25); }
+.btn-price {
+  display: block; text-align: center; text-decoration: none;
+  padding: 13px; border-radius: 8px; font-weight: 600;
+  font-size: 14px; transition: all 0.2s;
+}
+.btn-price-primary { background: var(--indigo); color: white; }
+.btn-price-primary:hover { background: #2d3f80; transform: translateY(-1px); }
+.btn-price-outline {
+  background: transparent; color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.btn-price-outline:hover { border-color: rgba(255,255,255,0.3); color: white; }
+
+/* ── TESTIMONIALS ── */
+.testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 56px; }
+.testimonial {
+  background: var(--ink2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 28px;
+}
+.testimonial-text {
+  font-size: 14px; color: rgba(255,255,255,0.75);
+  line-height: 1.8; margin-bottom: 20px;
+  font-style: italic; font-family: 'DM Serif Display', serif;
+}
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.testimonial-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 700; color: white;
+}
+.testimonial-name { font-size: 13px; font-weight: 600; color: white; }
+.testimonial-role { font-size: 11px; color: var(--muted); }
+
+/* ── CTA FINAL ── */
+.cta-section {
+  padding: 100px 60px; text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(61,82,160,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400; letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+.cta-section h2 em { font-style: italic; color: rgba(255,255,255,0.4); }
+.cta-section p { font-size: 1rem; color: var(--muted); margin-bottom: 40px; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic; font-size: 1.1rem; color: rgba(255,255,255,0.5);
+}
+.footer-copy { font-size: 12px; color: var(--muted); }
+
+/* ── ANIMACIONES DE ENTRADA ── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  section, .mockup-section, .cta-section { padding: 60px 24px; }
+  .stats-bar { gap: 32px; padding: 28px 24px; }
+  .steps { grid-template-columns: 1fr; }
+  .mock-kpis { grid-template-columns: repeat(3,1fr); }
+  footer { padding: 24px; flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">Sales<span>IQ</span> Pro</div>
+  <div class="nav-links">
+    <a href="#features">Funciones</a>
+    <a href="#how">Cómo funciona</a>
+    <a href="#pricing">Precios</a>
+    <a href="#contact" class="nav-cta">Solicitar demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">Machine Learning · Análisis de Ventas</div>
+    <h1>
+      <strong>Conoce tu negocio</strong><br>
+      <em>antes de que te sorprenda</em>
+    </h1>
+    <p class="hero-sub">
+      SalesIQ Pro analiza tus ventas, detecta alertas automáticas
+      y predice el próximo mes con inteligencia artificial.
+      Solo sube tu Excel — el resto lo hacemos nosotros.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Solicitar instalación →</a>
+      <a href="#how" class="btn-secondary">Ver cómo funciona</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num">3</div>
+    <div class="stat-label">Modelos de ML</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">95%</div>
+    <div class="stat-label">Precisión máxima</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">&lt;30s</div>
+    <div class="stat-label">Tiempo de análisis</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">Filas de datos</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="reveal">
+    <span class="section-tag">Funcionalidades</span>
+    <h2 class="section-title">Todo lo que tu negocio<br><em>necesita ver</em></h2>
+    <p class="section-sub">Sin configuraciones complicadas. Sin conocimientos técnicos. Solo sube tu archivo y obtén un análisis completo en segundos.</p>
+  </div>
+  <div class="features-grid reveal">
+    <div class="feat">
+      <span class="feat-icon">🔮</span>
+      <div class="feat-title">Predicción del próximo mes</div>
+      <div class="feat-desc">3 modelos de Machine Learning compiten entre sí. El más preciso predice tus ventas con intervalo de confianza real.</div>
+      <span class="feat-tag">Scikit-Learn · ML</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">📊</span>
+      <div class="feat-title">KPIs en tiempo real</div>
+      <div class="feat-desc">Ventas totales, ganancia neta, margen promedio, unidades vendidas y tendencia mensual — todo en una pantalla.</div>
+      <span class="feat-tag">Pandas · NumPy</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">⚠️</span>
+      <div class="feat-title">Alertas automáticas</div>
+      <div class="feat-desc">Detecta caídas de ventas, bajo stock y productos estrella sin que tengas que buscarlos manualmente.</div>
+      <span class="feat-tag">Detección inteligente</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🏆</span>
+      <div class="feat-title">Ranking de productos</div>
+      <div class="feat-desc">Sabe exactamente qué productos te hacen ganar más dinero y cuáles están jalando para abajo tus números.</div>
+      <span class="feat-tag">Análisis de rentabilidad</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">📁</span>
+      <div class="feat-title">Exportar reportes</div>
+      <div class="feat-desc">Descarga el análisis completo en Excel con 4 hojas estructuradas. Listo para entregar al dueño o a contabilidad.</div>
+      <span class="feat-tag">Excel · CSV</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🔄</span>
+      <div class="feat-title">Cualquier formato de datos</div>
+      <div class="feat-desc">Acepta Excel y CSV con más de 30 nombres de columna distintos. Compatible con casi cualquier sistema de punto de venta.</div>
+      <span class="feat-tag">Flexible · Universal</span>
+    </div>
+  </div>
+</section>
+
+<!-- MOCKUP DEL DASHBOARD -->
+<div class="mockup-section">
+  <div class="mockup-wrap">
+    <div class="mockup-header reveal">
+      <span class="section-tag" style="justify-content:center;display:flex;">Vista previa</span>
+      <h2 class="section-title" style="text-align:center;">Así se ve tu <em>dashboard</em></h2>
+    </div>
+    <div class="dashboard-mock reveal">
+      <div class="mock-topbar">
+        <div class="mock-dot" style="background:#ff5f57;"></div>
+        <div class="mock-dot" style="background:#ffbd2e;"></div>
+        <div class="mock-dot" style="background:#28c840;"></div>
+        <span style="font-size:11px;color:rgba(255,255,255,0.2);margin-left:12px;font-family:'JetBrains Mono',monospace;">salesiq.local · 8501</span>
+      </div>
+      <div class="mock-hero-bar">
+        <div class="mock-hero-title">Sales<em style="color:rgba(255,255,255,0.45);">IQ</em> Pro</div>
+        <div class="mock-hero-sub">// Inteligencia de ventas con Machine Learning</div>
+      </div>
+      <div class="mock-body">
+        <div style="font-size:10px;color:#8c8880;letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #e8e6e1;font-style:italic;">📌 Resumen ejecutivo</div>
+        <div class="mock-kpis">
+          <div class="mock-kpi" style="border-top-color:#3d52a0;">
+            <div class="mock-kpi-label">Ventas totales</div>
+            <div class="mock-kpi-value">$407K</div>
+          </div>
+          <div class="mock-kpi" style="border-top-color:#6272c3;">
+            <div class="mock-kpi-label">Prom. mensual</div>
+            <div class="mock-kpi-value">$33.9K</div>
+          </div>
+          <div class="mock-kpi" style="border-top-color:#1e6b4a;">
+            <div class="mock-kpi-label">Unidades</div>
+            <div class="mock-kpi-value">2,718</div>
+          </div>
+          <div class="mock-kpi" style="border-top-color:#b8621a;">
+            <div class="mock-kpi-label">Ganancia</div>
+            <div class="mock-kpi-value">$209K</div>
+          </div>
+          <div class="mock-kpi" style="border-top-color:#b91c3c;">
+            <div class="mock-kpi-label">Predicción ML</div>
+            <div class="mock-kpi-value">$68.2K</div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:#8c8880;letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:12px;margin-top:16px;font-style:italic;">📈 Tendencia de ventas</div>
+        <div class="mock-row">
+          <div class="mock-chart">
+            <div class="mock-chart-bars">
+              <div class="mock-bar" style="height:30%;"></div>
+              <div class="mock-bar" style="height:25%;"></div>
+              <div class="mock-bar" style="height:38%;"></div>
+              <div class="mock-bar" style="height:42%;"></div>
+              <div class="mock-bar" style="height:48%;"></div>
+              <div class="mock-bar" style="height:52%;"></div>
+              <div class="mock-bar highlight" style="height:68%;"></div>
+              <div class="mock-bar highlight" style="height:72%;"></div>
+              <div class="mock-bar" style="height:58%;"></div>
+              <div class="mock-bar" style="height:62%;"></div>
+              <div class="mock-bar highlight" style="height:88%;"></div>
+              <div class="mock-bar highlight" style="height:100%;"></div>
+            </div>
+          </div>
+          <div class="mock-pred-card">
+            <div class="mock-pred-label">◈ Próximo mes</div>
+            <div class="mock-pred-num">$68,240</div>
+            <div class="mock-pred-range">$58K — $78K</div>
+            <div style="background:rgba(255,255,255,0.12);border-radius:3px;height:4px;margin:14px 0 6px;">
+              <div style="background:rgba(255,255,255,0.6);height:4px;border-radius:3px;width:81%;"></div>
+            </div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.8);font-family:'DM Serif Display',serif;">81% confianza</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="reveal">
+    <span class="section-tag">Proceso</span>
+    <h2 class="section-title">Tres pasos y<br><em>listo para el cliente</em></h2>
+    <p class="section-sub">No necesitas saber de tecnología. Si sabes exportar un Excel desde tu sistema de ventas, ya puedes usar SalesIQ Pro.</p>
+  </div>
+  <div class="steps reveal">
+    <div class="step">
+      <span class="step-num">01</span>
+      <span class="step-icon">📤</span>
+      <div class="step-title">Sube tu archivo</div>
+      <div class="step-desc">Arrastra tu Excel o CSV de ventas. Acepta más de 30 formatos distintos de columnas — compatible con casi cualquier sistema.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <span class="step-icon">⚙️</span>
+      <div class="step-title">El ML trabaja solo</div>
+      <div class="step-desc">3 modelos se entrenan automáticamente con tus datos. El sistema elige el más preciso y calcula predicciones con intervalo de confianza.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <span class="step-icon">📥</span>
+      <div class="step-title">Descarga el reporte</div>
+      <div class="step-desc">Exporta el análisis completo en Excel con 4 hojas estructuradas, listo para presentar al dueño o al equipo de ventas.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--ink2);max-width:100%;padding:100px 60px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reveal">
+      <span class="section-tag">Planes</span>
+      <h2 class="section-title">Inversión que se paga<br><em>sola en el primer mes</em></h2>
+      <p class="section-sub">Precios para instalación directa en el negocio del cliente. Sin suscripciones, sin servidores, sin complicaciones.</p>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-name">Básico</div>
+        <div class="price-amount">$199<span> USD</span></div>
+        <div class="price-period">pago único · licencia por negocio</div>
+        <ul class="price-features">
+          <li>Dashboard completo</li>
+          <li>KPIs y tendencias</li>
+          <li>Top productos</li>
+          <li>Exportar Excel/CSV</li>
+          <li class="no">Predicción ML</li>
+          <li class="no">Alertas automáticas</li>
+          <li class="no">Soporte prioritario</li>
+        </ul>
+        <a href="#contact" class="btn-price btn-price-outline">Solicitar →</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Más popular</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amount">$349<span> USD</span></div>
+        <div class="price-period">pago único · licencia por negocio</div>
+        <ul class="price-features">
+          <li>Dashboard completo</li>
+          <li>KPIs y tendencias</li>
+          <li>Top productos</li>
+          <li>Exportar Excel/CSV</li>
+          <li>Predicción ML (3 modelos)</li>
+          <li>Alertas automáticas</li>
+          <li class="no">Soporte prioritario</li>
+        </ul>
+        <a href="#contact" class="btn-price btn-price-primary">Solicitar →</a>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Empresarial</div>
+        <div class="price-amount">$599<span> USD</span></div>
+        <div class="price-period">pago único · hasta 3 sucursales</div>
+        <ul class="price-features">
+          <li>Todo lo del plan Pro</li>
+          <li>Hasta 3 instalaciones</li>
+          <li>Personalización de marca</li>
+          <li>Capacitación incluida</li>
+          <li>Predicción ML (3 modelos)</li>
+          <li>Alertas automáticas</li>
+          <li>Soporte prioritario 6 meses</li>
+        </ul>
+        <a href="#contact" class="btn-price btn-price-outline">Solicitar →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section>
+  <div class="reveal">
+    <span class="section-tag">Testimonios</span>
+    <h2 class="section-title">Lo que dicen<br><em>nuestros clientes</em></h2>
+  </div>
+  <div class="testimonials reveal">
+    <div class="testimonial">
+      <div class="testimonial-text">"Antes tardaba un fin de semana armando los reportes en Excel. Ahora lo subo y en 30 segundos sé exactamente qué productos me están jalando hacia abajo."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:#3d52a0;">MR</div>
+        <div>
+          <div class="testimonial-name">Miguel Rodríguez</div>
+          <div class="testimonial-role">Dueño · Ferretería El Progreso</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-text">"La predicción me ayudó a pedir el inventario correcto en noviembre. Vendí todo y no me quedé con stock muerto como el año pasado."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:#b8621a;">LC</div>
+        <div>
+          <div class="testimonial-name">Laura Castro</div>
+          <div class="testimonial-role">Gerente · Tienda de Ropa Moda Sur</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-text">"Mi contador me pedía reportes cada mes. Ahora yo mismo los genero en Excel con un clic y se los mando. Ahorro tiempo y dinero."</div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:#1e6b4a;">AP</div>
+        <div>
+          <div class="testimonial-name">Andrés Paredes</div>
+          <div class="testimonial-role">Director · Distribuidora TechParts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta-section" id="contact">
+  <div style="position:relative;z-index:1;">
+    <span class="section-tag" style="display:block;margin-bottom:16px;">¿Listo para empezar?</span>
+    <h2>Instálalo en tu negocio<br><em>esta semana</em></h2>
+    <p>Sin contratos largos. Sin servidores. Solo pago único y tu negocio con inteligencia de datos desde el primer día.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a href="mailto:contacto@salesiqpro.com" class="btn-primary">Escribir por WhatsApp →</a>
+      <a href="#pricing" class="btn-secondary">Ver planes</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SalesIQ Pro</div>
+  <div class="footer-copy">© 2025 SalesIQ Pro · Inteligencia de ventas con ML</div>
+</footer>
+
+<script>
+// Animaciones de entrada con IntersectionObserver
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
