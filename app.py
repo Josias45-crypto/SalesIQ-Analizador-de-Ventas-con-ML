@@ -41,30 +41,35 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
-/* ── PALETA CORPORATIVA ────────────────────────────────────
-   Navy    #0b1e3d   fondo sidebar, hero
-   Gold    #c9a84c   acento dorado
-   Cream   #f8f6f1   fondo principal
-   Surface #ffffff   tarjetas
-   Steel   #2c4a6e   navy medio
-   Slate   #64748b   texto secundario
-   Border  #e8e3d9   bordes suaves
+/* ── PALETA CORPORATIVA PREMIUM ────────────────────────────
+   Charcoal  #1c1f26   fondo sidebar/hero (casi negro azulado)
+   Obsidian  #252930   variante oscura
+   Champagne #d4b896   acento cálido principal
+   Sand      #ede8df   fondo principal (arena cálida)
+   Surface   #ffffff   tarjetas
+   Stone     #f5f2ed   tarjeta alternativa
+   Slate     #5a6270   texto secundario
+   Border    #ddd8cf   bordes suaves
+   Emerald   #1a6b52   éxito/positivo
+   Crimson   #a83232   danger
+   Amber     #9a6f10   warning
+   Ink       #1c1f26   texto principal
 ────────────────────────────────────────────────────────── */
 :root {
-    --navy:    #0b1e3d;
-    --navy2:   #162d52;
-    --steel:   #2c4a6e;
-    --gold:    #c9a84c;
-    --gold2:   #e8c96a;
-    --cream:   #f8f6f1;
+    --navy:    #1c1f26;
+    --navy2:   #252930;
+    --steel:   #363d4a;
+    --gold:    #d4b896;
+    --gold2:   #e8d0b0;
+    --cream:   #ede8df;
     --surface: #ffffff;
-    --border:  #e8e3d9;
-    --slate:   #64748b;
-    --muted:   #94a3b8;
-    --success: #0f7a5a;
-    --danger:  #c0392b;
-    --warning: #b8860b;
-    --text:    #1a2a3a;
+    --border:  #ddd8cf;
+    --slate:   #5a6270;
+    --muted:   #8a909a;
+    --success: #1a6b52;
+    --danger:  #a83232;
+    --warning: #9a6f10;
+    --text:    #1c1f26;
 }
 
 /* ── RESET GLOBAL ──────────────────────────────────────── */
@@ -103,7 +108,7 @@ footer    { visibility: hidden; }
 /* ── BOTÓN PRINCIPAL ───────────────────────────────────── */
 .stButton > button {
     background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%) !important;
-    color: var(--navy) !important;
+    color: #1a0a00 !important;
     border: none !important;
     border-radius: 8px !important;
     font-family: 'Plus Jakarta Sans', sans-serif !important;
@@ -1114,7 +1119,7 @@ else:
             for a in alertas['positivo'][:5]:
                 st.markdown(f"""
                 <div class="alert-item" style="border-left-color:#0f7a5a;">
-                    <span>{a}</span>
+                    <span style="color:#0b1e3d;font-size:13px;">{a}</span>
                     <span style="color:#0f7a5a;font-size:10px;font-weight:700;
                                  letter-spacing:1px;">↑ BIEN</span>
                 </div>""", unsafe_allow_html=True)
