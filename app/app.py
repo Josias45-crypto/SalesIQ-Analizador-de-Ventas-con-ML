@@ -23,6 +23,11 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_absolute_percentage_error
 
+import sys, os
+sys.path.append(os.path.dirname(__file__))
+from auth import require_auth, logout, supabase
+from limits import filtrar_por_plan, mensaje_limite
+
 st.set_page_config(
     page_title="SalesIQ Pro",
     page_icon="📊",
@@ -750,6 +755,10 @@ def datos_ejemplo():
 # ============================================================
 # SIDEBAR
 # ============================================================
+# Verificar autenticación
+perfil = require_auth()
+plan = perfil.get("plan", "basico")
+
 with st.sidebar:
     st.markdown("""
     <div class="sb-logo">
@@ -801,6 +810,15 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+    st.markdown("<hr style='border-color:rgba(201,168,76,0.1);margin:20px 0;'>", unsafe_allow_html=True)
+    plan_nombres = {"basico": "Básico $9/mes", "pro": "Pro $19/mes", "empresarial": "Empresarial $39/mes"}
+    st.markdown(f"""
+    <div style='font-size:11px;color:#3a5070;margin-bottom:8px;'>
+        Plan activo: <strong style='color:#d4b896;'>{plan_nombres.get(plan, plan)}</strong>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("Cerrar sesión"):
+        logout()
 
 # ============================================================
 # CARGA DE DATOS
@@ -830,6 +848,14 @@ elif usar_ejemplo:
         df['costo']    = df['costo'].astype(float)
         df['ganancia']   = df['ventas'] - df['costo']
         df['margen_pct'] = (df['ganancia'] / df['ventas']) * 100
+
+    # Aplicar límite de historial según plan
+    if df is not None and 'mes' in df.columns:
+        meses_totales = df['mes'].nunique()
+        aviso = mensaje_limite(plan, meses_totales)
+        if aviso:
+            st.warning(aviso + " — Escríbenos: +51929201444")
+        df = filtrar_por_plan(df, plan)    
 
 
 # ============================================================
